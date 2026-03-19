@@ -14,13 +14,27 @@
     --user-bg: #2A3520; --user-border: #4A5A30;
     --agent-bg: #252522; --agent-border: #3D3D35;
   }
-  body { background: var(--bg); color: var(--body); font-family: 'Segoe UI', Calibri, sans-serif; height: 100vh; display: flex; flex-direction: column; }
+
+  /* Light mode */
+  body.light {
+    --bg: #F5F5F0; --card: #FFFFFF; --border: #E0E0D8;
+    --white: #1A1A17; --body: #444440; --muted: #777770; --dim: #999990;
+    --user-bg: #E8EDDF; --user-border: #C5CDB5;
+    --agent-bg: #F0F0EA; --agent-border: #E0E0D8;
+  }
+  body.light .header-icon::after { border-color: var(--card); }
+  body.light .msg-bubble strong { color: #1A1A17; }
+  body.light .msg-bubble code { background: #E8E8E0; color: #5A6A20; }
+  body.light .header-badge { color: #FFFFFF; }
+  body.light .send-btn { color: #FFFFFF; }
+
+  body { background: var(--bg); color: var(--body); font-family: 'Segoe UI', Calibri, sans-serif; height: 100vh; display: flex; flex-direction: column; transition: background 0.3s, color 0.3s; }
 
   /* Header */
   .header {
     background: var(--card); border-bottom: 1px solid var(--border);
     padding: 16px 24px; display: flex; align-items: center; gap: 14px;
-    flex-shrink: 0;
+    flex-shrink: 0; transition: background 0.3s;
   }
   .header-icon {
     width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--green));
@@ -32,11 +46,19 @@
   }
   .header-title { font-size: 17px; font-weight: 700; color: var(--white); }
   .header-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .header-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
   .header-badge {
-    margin-left: auto; background: var(--accent); color: var(--bg); font-size: 10px;
+    background: var(--accent); color: var(--bg); font-size: 10px;
     font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+  .header-btn {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--muted); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .header-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .header-btn svg { width: 18px; height: 18px; }
 
   /* Main area */
   .main { flex: 1; display: flex; overflow: hidden; }
@@ -44,7 +66,7 @@
   /* Sidebar */
   .sidebar {
     width: 300px; background: var(--card); border-right: 1px solid var(--border);
-    padding: 20px; overflow-y: auto; flex-shrink: 0;
+    padding: 20px; overflow-y: auto; flex-shrink: 0; transition: background 0.3s;
   }
   .sidebar-title { font-size: 13px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
   .suggestion {
@@ -53,10 +75,8 @@
     font-size: 13px; color: var(--body); line-height: 1.4;
   }
   .suggestion:hover { border-color: var(--accent); background: #22261A; color: var(--white); }
+  body.light .suggestion:hover { background: #F0F2E8; }
   .suggestion-icon { margin-right: 6px; }
-  .sidebar-divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
-  .sidebar-info { font-size: 11px; color: var(--dim); line-height: 1.5; }
-  .sidebar-info strong { color: var(--muted); }
 
   /* Chat area */
   .chat-container { flex: 1; display: flex; flex-direction: column; min-width: 0; }
@@ -81,7 +101,7 @@
 
   .msg-bubble {
     padding: 14px 18px; border-radius: 14px; font-size: 14px; line-height: 1.6;
-    position: relative;
+    position: relative; transition: background 0.3s;
   }
   .message.user .msg-bubble {
     background: var(--user-bg); border: 1px solid var(--user-border);
@@ -118,10 +138,22 @@
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
+  /* Skeleton loading */
+  .skeleton {
+    display: flex; gap: 12px; align-self: flex-start; max-width: 60%;
+  }
+  .skeleton .msg-bubble { padding: 18px 22px; width: 100%; min-width: 300px; }
+  .skeleton-line {
+    height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--border) 25%, var(--card) 50%, var(--border) 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; margin-bottom: 10px;
+  }
+  .skeleton-line:last-child { margin-bottom: 0; width: 60%; }
+  .skeleton-line:nth-child(2) { width: 85%; }
+
   /* Input area */
   .input-area {
     padding: 16px 24px; background: var(--card); border-top: 1px solid var(--border);
-    flex-shrink: 0;
+    flex-shrink: 0; transition: background 0.3s;
   }
   .input-wrapper {
     display: flex; gap: 10px; max-width: 100%; align-items: flex-end;
@@ -130,7 +162,7 @@
     flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
     padding: 14px 18px; font-size: 14px; color: var(--white); outline: none;
     font-family: inherit; resize: none; min-height: 48px; max-height: 120px;
-    line-height: 1.4;
+    line-height: 1.4; transition: background 0.3s, border-color 0.3s;
   }
   .input-field::placeholder { color: var(--dim); }
   .input-field:focus { border-color: var(--accent); }
@@ -153,6 +185,9 @@
     0%, 60%, 100% { transform: translateY(0); }
     30% { transform: translateY(-6px); }
   }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  .typing-cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); margin-left: 2px; vertical-align: text-bottom; animation: cursor-blink 0.7s infinite; }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -169,7 +204,15 @@
     <div class="header-title">Marketing Intelligence Agent</div>
     <div class="header-sub">AI-powered marketing analytics • Ask anything about your data</div>
   </div>
-  <div class="header-badge">Live Agent</div>
+  <div class="header-actions">
+    <div class="header-badge">Live Agent</div>
+    <button class="header-btn" onclick="clearChat()" title="Clear chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </button>
+    <button class="header-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle light/dark mode">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
 </div>
 
 <div class="main">
@@ -191,7 +234,7 @@
 
   <div class="chat-container">
     <div class="chat-messages" id="chatMessages">
-      <div class="welcome">
+      <div class="welcome" id="welcomeMsg">
         <div class="welcome-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
         <h2>Marketing Intelligence Agent</h2>
         <p>Ask me anything about marketing — campaign performance, market analytics, Google Trends, census demographics, predictive models, budget recommendations, or competitive insights. I have access to all your data.</p>
@@ -212,10 +255,57 @@
   const chatMessages = document.getElementById('chatMessages');
   const userInput = document.getElementById('userInput');
   const sendBtn = document.getElementById('sendBtn');
+  const BOLT_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
   let conversationHistory = [];
   let isLoading = false;
 
-  // Auto-resize textarea
+  // ─── Theme Toggle ───
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    const isLight = document.body.classList.contains('light');
+    localStorage.setItem('mia-theme', isLight ? 'light' : 'dark');
+    document.getElementById('themeIcon').innerHTML = isLight
+      ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+      : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+  // Restore theme
+  if (localStorage.getItem('mia-theme') === 'light') toggleTheme();
+
+  // ─── Clear Chat ───
+  function clearChat() {
+    conversationHistory = [];
+    localStorage.removeItem('mia-history');
+    chatMessages.innerHTML = `
+      <div class="welcome" id="welcomeMsg">
+        <div class="welcome-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <h2>Marketing Intelligence Agent</h2>
+        <p>Ask me anything about marketing — campaign performance, market analytics, Google Trends, census demographics, predictive models, budget recommendations, or competitive insights. I have access to all your data.</p>
+      </div>`;
+    userInput.focus();
+  }
+
+  // ─── Chat Persistence ───
+  function saveHistory() {
+    localStorage.setItem('mia-history', JSON.stringify(conversationHistory));
+  }
+
+  function loadHistory() {
+    const saved = localStorage.getItem('mia-history');
+    if (!saved) return;
+    try {
+      conversationHistory = JSON.parse(saved);
+      if (conversationHistory.length === 0) return;
+      // Remove welcome
+      const welcome = document.getElementById('welcomeMsg');
+      if (welcome) welcome.remove();
+      // Replay messages (no typing effect for history)
+      conversationHistory.forEach(msg => {
+        addMessageDirect(msg.role === 'assistant' ? 'agent' : msg.role, msg.content);
+      });
+    } catch(e) { conversationHistory = []; }
+  }
+
+  // ─── Auto-resize textarea ───
   userInput.addEventListener('input', () => {
     userInput.style.height = 'auto';
     userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
@@ -229,7 +319,6 @@
   }
 
   function askQuestion(text) {
-    // Remove the emoji icon prefix
     const clean = text.replace(/^[^\s]+\s/, '');
     userInput.value = clean;
     sendMessage();
@@ -240,7 +329,6 @@
   }
 
   function formatResponse(text) {
-    // Convert markdown-like formatting to HTML
     let html = text
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/`(.+?)`/g, '<code>$1</code>')
@@ -248,21 +336,32 @@
       .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
       .replace(/\n\n/g, '</p><p>')
       .replace(/\n/g, '<br>');
-
-    // Wrap consecutive <li> in <ul>
     html = html.replace(/((?:<li>.+?<\/li>\s*)+)/g, '<ul>$1</ul>');
     return '<p>' + html + '</p>';
   }
 
+  // Direct add (no animation — used for history replay)
+  function addMessageDirect(role, text) {
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    div.innerHTML = `
+      <div class="msg-avatar">${role === 'user' ? '👤' : BOLT_SVG}</div>
+      <div>
+        <div class="msg-bubble">${role === 'user' ? text : formatResponse(text)}</div>
+      </div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
   function addMessage(role, text) {
-    // Remove welcome message
-    const welcome = chatMessages.querySelector('.welcome');
+    const welcome = document.getElementById('welcomeMsg');
     if (welcome) welcome.remove();
 
     const div = document.createElement('div');
     div.className = `message ${role}`;
     div.innerHTML = `
-      <div class="msg-avatar">${role === 'user' ? '👤' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'}</div>
+      <div class="msg-avatar">${role === 'user' ? '👤' : BOLT_SVG}</div>
       <div>
         <div class="msg-bubble">${role === 'user' ? text : formatResponse(text)}</div>
         <div class="msg-time">${getTime()}</div>
@@ -272,27 +371,76 @@
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  function showTyping() {
+  // ─── Typing Effect ───
+  function addMessageWithTyping(text) {
+    const welcome = document.getElementById('welcomeMsg');
+    if (welcome) welcome.remove();
+
     const div = document.createElement('div');
-    div.className = 'message agent typing';
-    div.id = 'typingIndicator';
+    div.className = 'message agent';
     div.innerHTML = `
-      <div class="msg-avatar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1A17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+      <div class="msg-avatar">${BOLT_SVG}</div>
+      <div>
+        <div class="msg-bubble"><span id="typeTarget"></span><span class="typing-cursor"></span></div>
+        <div class="msg-time">${getTime()}</div>
+      </div>
+    `;
+    chatMessages.appendChild(div);
+
+    const target = document.getElementById('typeTarget');
+    const formatted = formatResponse(text);
+    // Parse into text nodes and HTML tags
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = formatted;
+    const fullText = tempDiv.textContent || '';
+
+    let i = 0;
+    const speed = 12; // ms per character
+
+    function typeChar() {
+      if (i < fullText.length) {
+        // Add characters in chunks for speed
+        const chunk = Math.min(3, fullText.length - i);
+        i += chunk;
+        // Re-render with formatted HTML up to visible portion
+        target.innerHTML = formatResponse(text.substring(0, Math.round(i * text.length / fullText.length)));
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        setTimeout(typeChar, speed);
+      } else {
+        // Done — show full formatted response, remove cursor
+        target.innerHTML = formatted;
+        const cursor = div.querySelector('.typing-cursor');
+        if (cursor) cursor.remove();
+        target.removeAttribute('id');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+    typeChar();
+  }
+
+  // ─── Skeleton Loading ───
+  function showSkeleton() {
+    const div = document.createElement('div');
+    div.className = 'message agent skeleton';
+    div.id = 'loadingSkeleton';
+    div.innerHTML = `
+      <div class="msg-avatar">${BOLT_SVG}</div>
       <div class="msg-bubble">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
+        <div class="skeleton-line" style="width:90%"></div>
+        <div class="skeleton-line" style="width:75%"></div>
+        <div class="skeleton-line" style="width:60%"></div>
       </div>
     `;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  function removeTyping() {
-    const el = document.getElementById('typingIndicator');
+  function removeSkeleton() {
+    const el = document.getElementById('loadingSkeleton');
     if (el) el.remove();
   }
 
+  // ─── Send Message ───
   async function sendMessage() {
     const text = userInput.value.trim();
     if (!text || isLoading) return;
@@ -304,8 +452,9 @@
 
     addMessage('user', text);
     conversationHistory.push({ role: 'user', content: text });
+    saveHistory();
 
-    showTyping();
+    showSkeleton();
 
     try {
       const res = await fetch('/api/chat', {
@@ -314,17 +463,18 @@
         body: JSON.stringify({ messages: conversationHistory }),
       });
 
-      removeTyping();
+      removeSkeleton();
       const data = await res.json();
 
       if (data.error) {
         addMessage('agent', '⚠️ ' + data.error);
       } else {
-        addMessage('agent', data.response);
+        addMessageWithTyping(data.response);
         conversationHistory.push({ role: 'assistant', content: data.response });
+        saveHistory();
       }
     } catch (err) {
-      removeTyping();
+      removeSkeleton();
       addMessage('agent', '⚠️ Connection error. Make sure the server is running.');
     }
 
@@ -332,6 +482,9 @@
     sendBtn.disabled = false;
     userInput.focus();
   }
+
+  // ─── Init: Load saved history ───
+  loadHistory();
 </script>
 </body>
 </html>
